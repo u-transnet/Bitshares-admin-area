@@ -4,6 +4,9 @@ from bitshares.asset import Asset
 from bitsharesapi.bitsharesnoderpc import BitSharesNodeRPC
 import json
 
+PRODUCTION_RPC_POINT = "wss://bitshares.openledger.info/ws"
+TESTNET_RPC_POINT = "wss://node.testnet.bitshares.eu"
+
 app = Flask(__name__, template_folder="../../templates")
 
 @app.route('/')
@@ -19,13 +22,16 @@ def get_asset():
     if not request.json:
         abort(400)
     # params
-    is_testnet = request.json.get('isTestnet')
+    is_testnet = request.json.get('is_testnet')
     ticker = request.json.get('ticker')
+    # check params
+    if any(v is None for v in [is_testnet, ticker]):
+        abort(500, "Enter all required parameters")
     # logic
     if is_testnet:
-        rpc_point = "wss://node.testnet.bitshares.eu"
+        rpc_point = TESTNET_RPC_POINT
     else:
-        rpc_point = "wss://bitshares.openledger.info/ws"
+        rpc_point = PRODUCTION_RPC_POINT
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
 @app.route('/add_authorities', methods=['POST'])
@@ -45,11 +51,14 @@ def add_authorities():
     ticker = request.json.get('ticker')
     list_type = request.json.get('list_type')
     authorities = request.json.get('authorities')
+    # check params
+    if any(v is None for v in [is_testnet, owner_wif, ticker, list_type, authorities]):
+        abort(500, "Enter all required parameters")
     # logic
     if is_testnet:
-        rpc_point = "wss://node.testnet.bitshares.eu"
+        rpc_point = TESTNET_RPC_POINT
     else:
-        rpc_point = "wss://bitshares.openledger.info/ws"
+        rpc_point = PRODUCTION_RPC_POINT
     chain = BitShares(
         rpc_point,
         nobroadcast=False,
@@ -78,11 +87,14 @@ def add_markets():
     ticker = request.json.get('ticker')
     list_type = request.json.get('list_type')
     authorities = request.json.get('authorities')
+    # check params
+    if any(v is None for v in [is_testnet, owner_wif, ticker, list_type, authorities]):
+        abort(500, "Enter all required parameters")
     # logic
     if is_testnet:
-        rpc_point = "wss://node.testnet.bitshares.eu"
+        rpc_point = TESTNET_RPC_POINT
     else:
-        rpc_point = "wss://bitshares.openledger.info/ws"
+        rpc_point = PRODUCTION_RPC_POINT
     chain = BitShares(
         rpc_point,
         nobroadcast=False,
@@ -100,7 +112,7 @@ def remove_authorities():
         string owner_wif: owner private key эмитента
         string ticker: тикер
         string list_type: тип списка white_list/black_list
-        string array authorities: массив id/name аккаунтов для удаления из черного/белого списока
+        string array authorities: массив id/name аккаунтов для удаления из черного/белого списка
     """
     if not request.json:
         abort(400)
@@ -110,11 +122,14 @@ def remove_authorities():
     ticker = request.json.get('ticker')
     list_type = request.json.get('list_type')
     authorities = request.json.get('authorities')
+    # check params
+    if any(v is None for v in [is_testnet, owner_wif, ticker, list_type, authorities]):
+        abort(500, "Enter all required parameters")
     # logic
     if is_testnet:
-        rpc_point = "wss://node.testnet.bitshares.eu"
+        rpc_point = TESTNET_RPC_POINT
     else:
-        rpc_point = "wss://bitshares.openledger.info/ws"
+        rpc_point = PRODUCTION_RPC_POINT
     chain = BitShares(
         rpc_point,
         nobroadcast=False,
@@ -127,12 +142,12 @@ def remove_authorities():
 
 @app.route('/remove_markets', methods=['POST'])
 def remove_markets():
-    """ Удалить тикеры из черного/белого списока
+    """ Удалить тикеры из черного/белого списка
         bool is_testnet: флаг testnet/production
         string owner_wif: owner private key эмитента
         string ticker: тикер
         string list_type: тип списка white_list/black_list
-        string array authorities: массив id/name тикеров для удаления из черного/белого списока
+        string array authorities: массив id/name тикеров для удаления из черного/белого списка
     """
     if not request.json:
         abort(400)
@@ -142,11 +157,14 @@ def remove_markets():
     ticker = request.json.get('ticker')
     list_type = request.json.get('list_type')
     authorities = request.json.get('authorities')
+    # check params
+    if any(v is None for v in [is_testnet, owner_wif, ticker, list_type, authorities]):
+        abort(500, "Enter all required parameters")
     # logic
     if is_testnet:
-        rpc_point = "wss://node.testnet.bitshares.eu"
+        rpc_point = TESTNET_RPC_POINT
     else:
-        rpc_point = "wss://bitshares.openledger.info/ws"
+        rpc_point = PRODUCTION_RPC_POINT
     chain = BitShares(
         rpc_point,
         nobroadcast=False,
@@ -158,4 +176,4 @@ def remove_markets():
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True, port=5500)
