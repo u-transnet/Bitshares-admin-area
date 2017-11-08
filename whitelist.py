@@ -7,7 +7,7 @@ import json
 PRODUCTION_RPC_POINT = "wss://bitshares.openledger.info/ws"
 TESTNET_RPC_POINT = "wss://node.testnet.bitshares.eu"
 
-app = Flask(__name__, template_folder="../../templates")
+app = Flask(__name__, template_folder="templates")
 
 @app.route('/')
 def index():
@@ -32,7 +32,7 @@ def get_asset():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    return json.dumps(BitSharesNodeRPC(rpc_point).get_account("cptn-solo"))
+    return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
 @app.route('/add_authorities', methods=['POST'])
 def add_authorities():
