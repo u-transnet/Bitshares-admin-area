@@ -32,7 +32,7 @@ def get_asset():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
+    return json.dumps(BitSharesNodeRPC(rpc_point).get_account("cptn-solo"))
 
 @app.route('/add_authorities', methods=['POST'])
 def add_authorities():
@@ -176,4 +176,4 @@ def remove_markets():
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5500)
+    app.run(debug=True, host='127.0.0.1', port=5500)
