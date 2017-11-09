@@ -1,17 +1,9 @@
-from flask import Flask, render_template, abort, request
 from bitshares import BitShares
 from bitshares.asset import Asset
 from bitsharesapi.bitsharesnoderpc import BitSharesNodeRPC
+from app import app, TESTNET_RPC_POINT, PRODUCTION_RPC_POINT
+from flask import request, abort
 import json
-
-PRODUCTION_RPC_POINT = "wss://bitshares.openledger.info/ws"
-TESTNET_RPC_POINT = "wss://node.testnet.bitshares.eu"
-
-app = Flask(__name__, template_folder="templates")
-
-@app.route('/')
-def index():
-    return render_template('not_found.html')
 
 @app.route('/get_asset', methods=['POST'])
 def get_asset():
@@ -59,13 +51,13 @@ def add_authorities():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    chain = BitShares(
+    bitshares = BitShares(
         rpc_point,
         nobroadcast=False,
         bundle=False,
         keys=owner_wif
     )
-    asset = Asset(ticker, False, False, chain)
+    asset = Asset(ticker, False, False, bitshares)
     asset.setoptions({"white_list": True})
     asset.add_authorities(list_type, authorities)
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
@@ -95,13 +87,13 @@ def add_markets():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    chain = BitShares(
+    bitshares = BitShares(
         rpc_point,
         nobroadcast=False,
         bundle=False,
         keys=owner_wif
     )
-    asset = Asset(ticker, False, False, chain)
+    asset = Asset(ticker, False, False, bitshares)
     asset.add_markets(list_type, authorities)
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
@@ -130,13 +122,13 @@ def remove_authorities():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    chain = BitShares(
+    bitshares = BitShares(
         rpc_point,
         nobroadcast=False,
         bundle=False,
         keys=owner_wif
     )
-    asset = Asset(ticker, False, False, chain)
+    asset = Asset(ticker, False, False, bitshares)
     asset.remove_authorities(list_type, authorities)
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
 
@@ -165,15 +157,12 @@ def remove_markets():
         rpc_point = TESTNET_RPC_POINT
     else:
         rpc_point = PRODUCTION_RPC_POINT
-    chain = BitShares(
+    bitshares = BitShares(
         rpc_point,
         nobroadcast=False,
         bundle=False,
         keys=owner_wif
     )
-    asset = Asset(ticker, False, False, chain)
+    asset = Asset(ticker, False, False, bitshares)
     asset.remove_markets(list_type, authorities)
     return json.dumps(BitSharesNodeRPC(rpc_point).get_asset(ticker))
-
-if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=5500)
