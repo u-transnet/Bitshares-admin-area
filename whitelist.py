@@ -1,7 +1,7 @@
 from bitshares import BitShares
 from bitshares.asset import Asset
 from bitsharesapi.bitsharesnoderpc import BitSharesNodeRPC
-from app import app, TESTNET_RPC_POINT, PRODUCTION_RPC_POINT
+from application import app, TESTNET_RPC_POINT, PRODUCTION_RPC_POINT
 from flask import request, abort
 import json
 

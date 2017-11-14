@@ -7,6 +7,6 @@ TESTNET_RPC_POINT = "wss://node.testnet.bitshares.eu"
 app = Flask(__name__, template_folder="templates")
 app.config.from_object(Configuration)
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
     return render_template('not_found.html')
