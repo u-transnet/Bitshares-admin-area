@@ -2,9 +2,11 @@ from bitshares.blockchain import Blockchain
 from bitshares import BitShares
 from application import app, TESTNET_RPC_POINT, PRODUCTION_RPC_POINT
 from flask import request, abort
+from flask_cors import cross_origin
 import json
 
 @app.route('/get_current_block_num', methods=['POST'])
+@cross_origin(origins=['http://dev.transnet.tech'])
 def get_current_block():
     """ Получить номер текущего блока в цепи
         bool is_testnet: флаг testnet/production
