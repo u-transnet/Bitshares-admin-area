@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 import json
 
 @app.route('/get_current_block_num', methods=['POST'])
-@cross_origin(origins=['http://dev.transnet.tech'])
+@cross_origin(origins=['http://dev.transnet.tech', 'https://dev.transnet.tech'])
 def get_current_block():
     """ Получить номер текущего блока в цепи
         bool is_testnet: флаг testnet/production
